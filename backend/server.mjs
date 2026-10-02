@@ -1083,7 +1083,8 @@ const server = createServer(async (req, res) => {
   }
 });
 
-const apiPort=Number(process.env.API_PORT||3001),apiHost=process.env.API_HOST||'127.0.0.1';
+const apiPort = Number(process.env.PORT || process.env.API_PORT || 3001);
+const apiHost = process.env.API_HOST || '0.0.0.0';
 if(!Number.isInteger(apiPort)||apiPort<1||apiPort>65535)throw new Error('API_PORT must be an integer between 1 and 65535.');
 server.listen(apiPort,apiHost,()=>logEvent('info','server.listening',{host:apiHost,port:apiPort,nodeEnv:process.env.NODE_ENV||'development'}));
 const reminderTimer=setInterval(()=>{try{createDueSessionReminders();subscriptionService.expireDue();subscriptionService.notifyExpiringSoon()}catch(error){logEvent('error','subscription.maintenance.failed',{errorType:error?.name||'Error'})}},60_000);
