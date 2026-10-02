@@ -1,0 +1,1 @@
+export default function MessageLoading({label='Loading messages…'}:{label?:string}){return <div role="status" className="grid min-h-32 place-items-center p-6 text-sm text-slate-500"><span>{label}</span></div>;}

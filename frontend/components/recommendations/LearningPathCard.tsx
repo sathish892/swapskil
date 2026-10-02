@@ -1,0 +1,11 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { apiRequest } from '../../service/api';
+
+type PathItem={skillId:string;name:string;category:string;reason:string;step:number};
+type LearningPath={goal:string;currentSkills:Array<{skillId:string;name:string;type:string}>;items:PathItem[];disclaimer:string};
+export default function LearningPathCard(){
+  const [data,setData]=useState<LearningPath|null>(null),[loading,setLoading]=useState(true),[error,setError]=useState(false);
+  useEffect(()=>{let live=true;apiRequest<LearningPath>('/api/recommendations/learning-path?limit=4').then(result=>{if(live)setData(result)}).catch(()=>{if(live)setError(true)}).finally(()=>{if(live)setLoading(false)});return()=>{live=false}},[]);
+  return <section className="rounded-2xl border border-slate-200 bg-white p-5"><h2 className="text-lg font-bold text-slate-900">Suggested Learning Path</h2><p className="mt-1 text-sm text-slate-500">Optional catalog skills related to your profile.</p>{loading?<div role="status" className="mt-4 h-24 animate-pulse rounded-xl bg-slate-100"> <span className="sr-only">Finding relevant matches…</span></div>:error?<p role="status" className="mt-4 rounded-xl bg-slate-50 p-4 text-sm text-slate-500">Smart recommendations are temporarily unavailable.</p>:!data?.items.length?<p className="mt-4 rounded-xl bg-slate-50 p-4 text-sm text-slate-500">No new recommendations right now. Add a learning goal or skills to get suggestions.</p>:<><div className="mt-4 flex flex-wrap items-center gap-2">{data.items.map((item,index)=><span key={item.skillId} className="flex items-center gap-2"><Link to={`/skills/${encodeURIComponent(item.skillId)}`} className="rounded-full border border-brand-100 bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-800">{item.name}</Link>{index<data.items.length-1&&<span aria-hidden="true" className="text-slate-400">→</span>}</span>)}</div><ul className="mt-4 space-y-2">{data.items.map(item=><li key={item.skillId} className="text-sm text-slate-600"><span className="font-semibold text-slate-800">{item.name}:</span> {item.reason}</li>)}</ul><p className="mt-3 text-xs text-slate-500">{data.disclaimer}</p></>}</section>
+}

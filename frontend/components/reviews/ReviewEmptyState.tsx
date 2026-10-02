@@ -1,0 +1,1 @@
+export default function ReviewEmptyState() { return <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-7 text-center"><h3 className="font-semibold text-slate-800">No reviews yet.</h3><p className="mt-1 text-sm text-slate-500">Be the first to share your experience.</p></div>; }

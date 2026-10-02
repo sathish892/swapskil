@@ -1,0 +1,9 @@
+import { useEffect, useState } from 'react';
+import ReviewForm, { type ReviewValues } from './ReviewForm';
+export default function ReviewModal({open,onClose,onSubmit,initial,title='Leave a Review'}:{open:boolean;onClose:()=>void;onSubmit:(values:ReviewValues)=>Promise<void>;initial?:ReviewValues;title?:string}) {
+  const [busy,setBusy]=useState(false);const [error,setError]=useState('');const [success,setSuccess]=useState('');
+  useEffect(()=>{if(open){setError('');setSuccess('');}function key(event:KeyboardEvent){if(event.key==='Escape'&&!busy)onClose()}if(open){window.addEventListener('keydown',key);return()=>window.removeEventListener('keydown',key)}},[open,busy,onClose]);
+  if(!open)return null;
+  async function submit(values:ReviewValues){setBusy(true);setError('');setSuccess('');try{await onSubmit(values);setSuccess(initial?'Review updated successfully!':'Review submitted successfully!');window.setTimeout(onClose,600);}catch(e){setError(e instanceof Error?e.message:'Unable to submit your review. Please try again.');}finally{setBusy(false);}}
+  return <div className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-slate-950/50 p-4" onMouseDown={event=>{if(event.target===event.currentTarget&&!busy)onClose()}}><section role="dialog" aria-modal="true" aria-labelledby="review-modal-title" className="my-8 w-full max-w-lg rounded-3xl bg-white p-5 shadow-2xl sm:p-7"><div className="mb-5 flex items-center justify-between"><h2 id="review-modal-title" className="text-xl font-extrabold text-slate-900">{title}</h2><button type="button" onClick={onClose} aria-label="Close review form" className="rounded-lg p-2 text-slate-500 hover:bg-slate-100">×</button></div><ReviewForm key={`${initial?.reviewType||'TEACHING'}:${initial?.rating||0}:${initial?.comment||''}`} initial={initial} onSubmit={submit} submitLabel={initial?'Update Review':'Submit Review'} busy={busy} error={error} success={success}/></section></div>;
+}

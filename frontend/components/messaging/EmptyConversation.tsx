@@ -1,0 +1,2 @@
+import { Link } from 'react-router-dom';
+export default function EmptyConversation(){return <div className="grid h-full min-h-56 place-items-center p-6 text-center"><div><p className="font-semibold text-slate-800">No conversations yet.</p><p className="mx-auto mt-2 max-w-xs text-sm text-slate-500">Find a skill and connect with someone to start your first conversation.</p><Link to="/matches" className="mt-4 inline-flex rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700">Find Skills</Link></div></div>;}

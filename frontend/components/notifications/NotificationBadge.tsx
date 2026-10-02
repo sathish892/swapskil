@@ -1,0 +1,1 @@
+export default function NotificationBadge({count}:{count:number}){return count>0?<span aria-label={`${count} unread notifications`} className="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full bg-rose-600 px-1.5 py-0.5 text-[11px] font-bold leading-4 text-white">{count>99?'99+':count}</span>:null;}
